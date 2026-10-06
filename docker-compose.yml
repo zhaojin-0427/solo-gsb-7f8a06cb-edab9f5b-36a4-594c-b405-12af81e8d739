@@ -1,0 +1,20 @@
+services:
+  spectrum:
+    build: .
+    image: spectrum-http:latest
+    container_name: spectrum-http
+    ports:
+      - "8000:8000"
+    environment:
+      SPECTRUM_DB: /data/spectrum.db
+    volumes:
+      - spectrum-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  spectrum-data:
